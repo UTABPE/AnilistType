@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { useContext } from 'react';
+import { AnimeType } from 'types/animeTypes';
 import { AppContext } from '../../AppContext';
 import { Cross } from '../atoms/Icons';
 
@@ -9,11 +10,11 @@ const Span = styled.span`
   font-family: Montserrat;
 `;
 
-export const FavAnimeCard = ({ item }) => {
+export const FavAnimeCard = ({ item }: any) => {
   const { setFavoriteAnime } = useContext(AppContext);
   const clickHandler = () => {
-    setFavoriteAnime((prev) =>
-      prev.filter((oldItem) => oldItem.id !== item.id)
+    setFavoriteAnime((prev: AnimeType[]) =>
+      prev.filter((oldItem: AnimeType) => oldItem?.id !== item.id)
     );
   };
   return (
@@ -22,6 +23,7 @@ export const FavAnimeCard = ({ item }) => {
         <img
           className="w-auto h-full max-w-none"
           src={item.coverImage.medium}
+          alt={item.title.english}
         />
       </div>
       <div className="w-60 h-full flex flex-row justify-between p-3">

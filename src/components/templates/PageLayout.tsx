@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom';
-import { PageHeader } from '../organisms/PageHeader.jsx';
+import { PageHeader } from '../organisms/PageHeader';
 export const PageLayout = () => {
   return (
     <div className="flex flex-col items-center">

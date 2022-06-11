@@ -1,14 +1,15 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 
 import React from 'react';
+import { AnimeType } from 'types/animeTypes';
 export type FavoriteAnime = {};
 
 export type PageMeatType = {
-  favoriteAnime?: [];
+  favoriteAnime?: AnimeType[];
 };
 export type AppContextType = PageMeatType & {
   setFavoriteAnime: (favoriteAnime?: any) => void;
-  isFavoriteAnime: (data: any, obj: any) => void;
+  isFavoriteAnime: (data: any, obj: any) => any;
 };
 
 export const AppContext = createContext<AppContextType>({
@@ -24,12 +25,12 @@ export const AppContext = createContext<AppContextType>({
 });
 
 export const AppContextProvider = ({ children }: any) => {
-  const [favoriteAnime, setFavoriteAnime] = useState<any | undefined>([]);
-  const isFavoriteAnime = (data: any, obj: any) =>
-    data.some((el: any) =>
+  const [favoriteAnime, setFavoriteAnime] = useState<AnimeType[]>([]);
+  const isFavoriteAnime = (data: AnimeType[], obj: any) => {
+    return data?.some((el: any) =>
       Object.entries(obj).every(([key, value]) => value === el[key])
     );
-
+  };
   return (
     <AppContext.Provider
       value={{

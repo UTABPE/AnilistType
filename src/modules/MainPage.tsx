@@ -1,34 +1,23 @@
-import styled from '@emotion/styled';
+import { AnimeType, PageType } from 'types/animeTypes';
 import { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../AppContext';
 import { ArrowRight } from '../components/atoms/Icons.jsx';
-import { SearchBar } from '../components/atoms/SearchBar.jsx';
-import { AnimeCard } from '../components/molecules/AnimeCard.jsx';
-import { FavAnimeCard } from '../components/molecules/FavAnimeCard.jsx';
+import { SearchBar } from '../components/atoms/SearchBar';
+import { AnimeCard } from '../components/molecules/AnimeCard';
+import { FavAnimeCard } from '../components/molecules/FavAnimeCard';
+import { Table, Title } from '../components/atoms/CssTags.jsx';
+// import { useMemo } from 'react';
 
-const Title = styled.h1`
-  font-size: 36px;
-  font-weight: 700;
-  font-family: Noto;
-  color: #00cc99;
-`;
-const Table = styled.div`
-  width: 100%;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  row-gap: 1rem;
-  @media only screen and (max-width: 1200px) {
-    grid-template-columns: repeat(1, minmax(0, 1fr));
-  }
-`;
 export const MainPage = () => {
   const { favoriteAnime } = useContext(AppContext);
   const [searchTerm, setSearchTerm] = useState();
-  const [searchedAnime, setSearchedAnime] = useState([]);
-  const [hasNextPage, setHasNextPage] = useState(false);
   const [page, setPage] = useState(1);
-  const [pageLoading, setPageLoading] = useState(false);
-  const searchHandler = (e) => {
+  const [hasNextPage, setHasNextPage] = useState(false);
+  const [searchedAnime, setSearchedAnime] = useState<AnimeType[]>([]);
+  const [pageLoading, setPageLoading] = useState<boolean>(false);
+
+  const searchHandler = (e: React.BaseSyntheticEvent) => {
+    setPageLoading(true);
     setSearchTerm(e.target.value);
     setPage(1);
     setTimeout(() => {
@@ -87,20 +76,22 @@ export const MainPage = () => {
           .then(handleData)
           .catch(handleError);
 
-        function handleResponse(response) {
-          return response.json().then(function (json) {
+        function handleResponse(response: any) {
+          return response.json().then(function (json: any) {
             return response.ok ? json : Promise.reject(json);
           });
         }
 
-        function handleData(data) {
-          setSearchedAnime((prev) => [...prev, ...data.data.Page.media]);
+        function handleData(data: PageType) {
+          setSearchedAnime((prevState: AnimeType[]) => [
+            ...prevState,
+            ...data.data.Page.media,
+          ]);
           setHasNextPage(data.data.Page.pageInfo.hasNextPage);
-          // console.log(data);
           setPageLoading(false);
         }
 
-        function handleError(error) {
+        function handleError(error: any) {
           console.error(error);
         }
       }
@@ -112,9 +103,9 @@ export const MainPage = () => {
     <section className="w-[1200px] flex flex-col items-center gap-7 py-7 sm:w-[385px]">
       <Title>Список аниме</Title>
       <SearchBar onChange={searchHandler} />
-      <Table className="gap-x-6">
-        {searchedAnime?.map((item) => (
-          <AnimeCard key={item.id} item={item} />
+      <Table className={`gap-x-6 min-h-[50px] ${pageLoading && 'opacity-50'}`}>
+        {searchedAnime?.map((item: AnimeType) => (
+          <AnimeCard key={item?.id} item={item} />
         ))}
       </Table>
       {hasNextPage && (
@@ -134,10 +125,9 @@ export const MainPage = () => {
           )}
         </button>
       )}
-
       <Title>Любимое аниме</Title>
       <Table className="gap-x-[71px]">
-        {favoriteAnime?.map((item) => (
+        {favoriteAnime?.map((item: any) => (
           <FavAnimeCard key={item.id} item={item} />
         ))}
       </Table>
