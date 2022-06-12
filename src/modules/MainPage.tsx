@@ -92,6 +92,7 @@ export const MainPage = () => {
         }
 
         function handleError(error: any) {
+          alert('Что-то не так. Попробуйте снова');
           console.error(error);
         }
       }
